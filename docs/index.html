@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A conceptual animation of how a Rényi corrector could improve minority-class fidelity in diffusion sampling.">
+  <title>Rényi correction and minority-class fidelity</title>
+  <style>
+    :root { color-scheme: light; --ink:#003d4f; --muted:#536970; --paper:#fff; --mist:#edf1f3; --pink:#f2617a; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font:17px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { max-width:1180px; margin:auto; padding:54px 30px 44px; }
+    .eyebrow { margin:0 0 14px; font-size:13px; font-weight:650; letter-spacing:.11em; text-transform:uppercase; }
+    h1 { max-width:900px; margin:0 0 18px; font-size:clamp(29px,4.5vw,49px); line-height:1.15; letter-spacing:-.035em; }
+    .intro { max-width:880px; margin:0 0 30px; font-size:20px; color:var(--muted); }
+    figure { margin:0; }
+    video { display:block; width:100%; aspect-ratio:16/9; background:var(--mist); }
+    figcaption { margin-top:12px; color:var(--muted); font-size:14px; }
+    a:focus-visible,summary:focus-visible { outline:3px solid var(--pink); outline-offset:4px; }
+    .download { display:inline-block; margin-top:20px; padding:9px 14px; border:1px solid var(--ink); border-radius:4px; background:var(--ink); color:white; text-decoration:none; font-size:15px; }
+    .download:hover { color:var(--ink); }
+    .notes { max-width:870px; margin:34px 0 0; padding-top:22px; border-top:2px solid var(--mist); }
+    h2 { margin:0 0 12px; font-size:24px; }
+    .notes p { margin:0 0 15px; }
+    details { margin-top:22px; }
+    summary { cursor:pointer; font-weight:600; }
+    ol { padding-left:24px; }
+    li { padding:4px 0; }
+    footer { margin-top:36px; color:var(--muted); font-size:13px; }
+    @media(max-width:560px) { main { padding:28px 16px; } .intro { font-size:17px; } }
+  </style>
+</head>
+<body>
+<main>
+  <p class="eyebrow">Rényi sampling / conceptual animation</p>
+  <h1>Could distribution feedback improve minority-class fidelity?</h1>
+  <p class="intro">Sparse training coverage can leave a diffusion model’s score uncertain. A Rényi corrector could reduce sampling mismatch by comparing generated particles with a reference at the same noise level.</p>
+  <figure>
+    <video id="animation" controls playsinline preload="metadata" poster="poster.png" aria-label="Thirty-four second animation explaining a proposed Rényi correction mechanism" aria-describedby="animation-caption">
+      <source src="renyi-minority-fidelity.mp4" type="video/mp4">
+      Your browser does not support embedded video. <a href="renyi-minority-fidelity.mp4">Download the animation.</a>
+    </video>
+    <figcaption id="animation-caption">34 seconds, with on-screen explanations and no audio. The particles and densities are schematic, not a trained-model experiment.</figcaption>
+  </figure>
+  <a class="download" href="renyi-minority-fidelity.mp4" download>Download MP4 for slides</a>
+  <section class="notes" aria-labelledby="interpretation">
+    <h2 id="interpretation">How to read the animation</h2>
+    <p>Gaussian corruption produces a smooth density. The proposed difficulty is estimating its score reliably from sparse data, especially near poorly covered minority regions. The animation depicts one possible consequence: reverse trajectories drift toward regions poorly supported by the reference.</p>
+    <p>At selected noise levels, a discriminator compares current sampler particles with training examples corrupted to the same level. Its density-ratio estimate sets the Rényi mobility. The corrector changes both the drift and the stochastic diffusion before ordinary denoising resumes. The arrows depict intended redistribution, not an exact simulated force field.</p>
+    <p>This is a hypothesis about fidelity, not a guarantee. Correction cannot supply missing training information. Evaluation should check minority fidelity on held-out data, preserve diversity, and test for memorization. Highlighting the minority region here does not mean the corrector requires class labels.</p>
+    <details>
+      <summary>Animation transcript</summary>
+      <ol>
+        <li><strong>0:00–0:08:</strong> A majority class has many training examples along a curved support. A minority class has fewer examples and larger gaps. Gaussian corruption spreads each example smoothly but does not eliminate sparse evidence.</li>
+        <li><strong>0:08–0:12:</strong> Two panels start with the same particles. Both denoise toward the minority region. Some illustrative trajectories accumulate error and move away from the noised reference.</li>
+        <li><strong>0:12–0:26:</strong> The left panel continues DDPM sampling. In the right panel, short Rényi correction rounds at three noise levels move the sampling distribution closer to the matched reference. The noise level stays fixed within each correction round.</li>
+        <li><strong>0:26–0:34:</strong> The method alternates a DDPM predictor, density-ratio estimation, and a Rényi corrector. Mobility weights the learned score and noise, with an additional mobility-gradient term in the drift. Potential fidelity gains require experimental validation.</li>
+      </ol>
+    </details>
+  </section>
+  <footer>Research illustration based on the Rényi sampling corrector. No numerical improvement is claimed by this animation.</footer>
+</main>
+</body>
+</html>
