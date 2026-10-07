@@ -3,6 +3,13 @@
 Standalone code for training GMM and stacked-MNIST diffusion models from scratch
 and sampling with Rényi corrections.
 
+## Rényi Correction Schematic
+![Rényi correction animation](docs/renyi-minority-fidelity.gif)
+
+Conceptual illustration of the proposed mechanism.
+
+[Watch the full-quality video](docs/renyi-minority-fidelity.mp4)
+
 ## Files
 
 - `GMM.py`: eight-component imbalanced mixtures in 2, 8, 16, 32 and 64 dimensions.
